@@ -20,11 +20,11 @@ class MainActivity : AppCompatActivity() {
 
         model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
 
-        guessing_word.text = model.nextWord()
+        current_word.text = model.getCurrentWord()
         score_value.text = model.getScore().value.toString()
 
-        val nextWordClickListener = View.OnClickListener { guessing_word.text = model.skipWord() }
-        val guessedClickListener = View.OnClickListener { guessing_word.text = model.scoreWord() }
+        val nextWordClickListener = View.OnClickListener { current_word.text = model.skipWord() }
+        val guessedClickListener = View.OnClickListener { current_word.text = model.scoreWord() }
 
         button_skip.setOnClickListener(nextWordClickListener)
         button_guessed.setOnClickListener(guessedClickListener)

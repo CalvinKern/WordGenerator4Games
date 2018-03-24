@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WordsViewModel : ViewModel() {
     private val LIST_OF_WORDS: String =
@@ -295,11 +296,18 @@ class WordsViewModel : ViewModel() {
         return nextWord()
     }
 
-    fun nextWord(): String {
+    fun getCurrentWord(): String {
         if (words.value == null || words.value!!.isEmpty()) {
             loadWords()
         }
-        return (words.value as ArrayList).removeAt(0)
+        return words.value!![0]
+    }
+
+    private fun nextWord(): String {
+        if (words.value != null && !words.value!!.isEmpty()) {
+            (words.value as ArrayList<String>).removeAt(0)
+        }
+        return getCurrentWord()
     }
 
     // Load a shuffled version of the list of words
