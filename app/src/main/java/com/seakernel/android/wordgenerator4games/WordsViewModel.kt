@@ -339,7 +339,6 @@ class WordsViewModel : ViewModel() {
     }
 
     fun reset() {
-        loadWords()
         score.value = 0
         time.value = INITIAL_TIME
         gameState.value = GameState.EMPTY

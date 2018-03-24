@@ -32,6 +32,7 @@ class IntermissionGameFragment: Fragment() {
         }
 
         button_start.setOnClickListener {
+            model.reset()
             model.startPlaying()
         }
     }
