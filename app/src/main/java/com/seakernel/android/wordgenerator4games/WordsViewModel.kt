@@ -40,18 +40,20 @@ class WordsViewModel : ViewModel() {
             "week\n" +
             "year"
 
+    private var score: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
     private var words: MutableLiveData<List<String>> = MutableLiveData()
 
-    fun getWords(): LiveData<List<String>> {
-        if (words.value == null) {
-            words.value = ArrayList()
-            loadWords()
-        }
-        return words
+    fun getScore(): LiveData<Int> {
+        return score
+    }
+
+    fun scoreWord(): String {
+        score.value = score.value?.plus(1)
+        return nextWord()
     }
 
     fun nextWord(): String {
-        if (words.value?.isEmpty()!!) {
+        if (words.value == null || words.value!!.isEmpty()) {
             loadWords()
         }
         return (words.value as ArrayList).removeAt(0)
@@ -59,6 +61,9 @@ class WordsViewModel : ViewModel() {
 
     // Load a shuffled version of the list of words
     private fun loadWords() {
-        words.value = words.value?.plus(LIST_OF_WORDS.split("\n").apply { Collections.shuffle(this) })
+        if (words.value == null) {
+            words.value = ArrayList()
+        }
+        words.value = words.value!!.plus(LIST_OF_WORDS.split("\n").apply { Collections.shuffle(this) })
     }
 }
