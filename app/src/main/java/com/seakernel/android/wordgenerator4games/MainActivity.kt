@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_controls.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,16 @@ class MainActivity : AppCompatActivity() {
 
         button_skip.setOnClickListener(nextWordClickListener)
         button_guessed.setOnClickListener(guessedClickListener)
+
+        val timer = Timer()
+        timer.scheduleAtFixedRate(object: TimerTask() {
+            override fun run() {
+                time_left.post( {
+                    val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
+                    time_left.text = String.format("%d:%02d", secondsLeft / 60, secondsLeft % 60)
+                })
+            }
+        }, 1000, 1000)
     }
 
     override fun onDestroy() {
