@@ -273,9 +273,20 @@ class WordsViewModel : ViewModel() {
                     "worm\n" +
                     "spider web"
 
-    private var score: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
-    private var time: MutableLiveData<Long> = MutableLiveData<Long>().also { it.value = 90L }
+    enum class GameState {
+        EMPTY, PLAYING, INTERMISSION
+    }
+
+    val INITIAL_TIME = 90L
+
     private var words: MutableLiveData<List<String>> = MutableLiveData()
+    private var score: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
+    private var time: MutableLiveData<Long> = MutableLiveData<Long>().also { it.value = INITIAL_TIME }
+    private var gameState: MutableLiveData<GameState> = MutableLiveData<GameState>().also { it.value = GameState.EMPTY }
+
+    fun getGameState(): LiveData<GameState> {
+        return gameState
+    }
 
     fun getScore(): LiveData<Int> {
         return score
@@ -287,6 +298,11 @@ class WordsViewModel : ViewModel() {
 
     fun getTimeAndDecrementOneSecond(): LiveData<Long> {
         time.value = time.value!! - 1L
+
+        if (time.value!! <= 0) {
+            gameState.value = GameState.INTERMISSION
+        }
+
         return time
     }
 
@@ -320,5 +336,16 @@ class WordsViewModel : ViewModel() {
             words.value = ArrayList()
         }
         words.value = words.value!!.plus(LIST_OF_WORDS.split("\n").apply { Collections.shuffle(this) })
+    }
+
+    fun reset() {
+        loadWords()
+        score.value = 0
+        time.value = INITIAL_TIME
+        gameState.value = GameState.EMPTY
+    }
+
+    fun startPlaying() {
+        gameState.value = WordsViewModel.GameState.PLAYING
     }
 }
