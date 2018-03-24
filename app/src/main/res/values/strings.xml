@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">Word Generator 4 Games</string>
 
+    <string name="next_player">Next Player Ready?</string>
+
     <string name="guessed">Guessed</string>
     <string name="skip">Skip</string>
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
 
     <string name="time_left_blank">--:--</string>
     <string name="time_format">%1$d:%2$02d</string>
