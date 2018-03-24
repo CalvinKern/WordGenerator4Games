@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
 
+        time_left.text = getTimeLeftFormatted(model.getTime().value!!)
         current_word.text = model.getCurrentWord()
         score_value.text = model.getScore().value.toString()
 
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
                 time_left.post( {
                     val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
-                    time_left.text = getString(R.string.time_format, secondsLeft / 60, secondsLeft % 60)
+                    time_left.text = getTimeLeftFormatted(secondsLeft)
                 })
             }
         }, 1000, 1000)
@@ -45,5 +46,9 @@ class MainActivity : AppCompatActivity() {
 
         button_skip.setOnClickListener(null)
         button_guessed.setOnClickListener(null)
+    }
+
+    private fun getTimeLeftFormatted(secondsLeft: Long): String {
+        return getString(R.string.time_format, secondsLeft / 60, secondsLeft % 60)
     }
 }

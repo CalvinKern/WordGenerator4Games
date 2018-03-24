@@ -281,6 +281,10 @@ class WordsViewModel : ViewModel() {
         return score
     }
 
+    fun getTime(): LiveData<Long> {
+        return time
+    }
+
     fun getTimeAndDecrementOneSecond(): LiveData<Long> {
         time.value = time.value!! - 1L
         return time
