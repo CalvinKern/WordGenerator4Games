@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             override fun run() {
                 time_left.post( {
                     val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
-                    time_left.text = String.format("%d:%02d", secondsLeft / 60, secondsLeft % 60)
+                    time_left.text = getString(R.string.time_format, secondsLeft / 60, secondsLeft % 60)
                 })
             }
         }, 1000, 1000)
