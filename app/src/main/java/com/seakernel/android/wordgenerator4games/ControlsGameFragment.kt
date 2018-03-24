@@ -36,7 +36,32 @@ class ControlsGameFragment: Fragment() {
         button_skip.setOnClickListener(nextWordClickListener)
         button_guessed.setOnClickListener(guessedClickListener)
 
-        time_left.postDelayed(object: Runnable {
+        startTimer(model)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val model = ViewModelProviders.of(activity!!).get(WordsViewModel::class.java)
+        model.startPlaying()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        val model = ViewModelProviders.of(activity!!).get(WordsViewModel::class.java)
+        model.pauseGame()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        button_skip?.setOnClickListener(null)
+        button_guessed?.setOnClickListener(null)
+    }
+
+    private fun startTimer(model: WordsViewModel) {
+        time_left?.postDelayed(object: Runnable {
             override fun run() {
                 val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
                 time_left?.text = getTimeLeftFormatted(secondsLeft)
@@ -46,13 +71,6 @@ class ControlsGameFragment: Fragment() {
                 }
             }
         }, 1000)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        button_skip?.setOnClickListener(null)
-        button_guessed?.setOnClickListener(null)
     }
 
     private fun getTimeLeftFormatted(secondsLeft: Long): String {

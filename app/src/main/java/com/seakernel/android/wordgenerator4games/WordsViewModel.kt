@@ -274,7 +274,7 @@ class WordsViewModel : ViewModel() {
                     "spider web"
 
     enum class GameState {
-        EMPTY, PLAYING, INTERMISSION
+        EMPTY, PLAYING, INTERMISSION, PAUSED
     }
 
     val INITIAL_TIME = 90L
@@ -297,7 +297,7 @@ class WordsViewModel : ViewModel() {
     }
 
     fun getTimeAndDecrementOneSecond(): LiveData<Long> {
-        time.value = time.value!! - 1L
+        time.value = time.value!! - if (gameState.value == GameState.PLAYING) 1L else 0
 
         if (time.value!! <= 0) {
             gameState.value = GameState.INTERMISSION
@@ -345,6 +345,14 @@ class WordsViewModel : ViewModel() {
     }
 
     fun startPlaying() {
-        gameState.value = WordsViewModel.GameState.PLAYING
+        if (gameState.value!! != WordsViewModel.GameState.PLAYING) {
+            gameState.value = WordsViewModel.GameState.PLAYING
+        }
+    }
+
+    fun pauseGame() {
+        if (gameState.value!! != WordsViewModel.GameState.PAUSED) {
+            gameState.value = WordsViewModel.GameState.PAUSED
+        }
     }
 }

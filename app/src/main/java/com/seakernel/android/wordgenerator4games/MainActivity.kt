@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity() {
 
         val model = ViewModelProviders.of(this).get(WordsViewModel::class.java)
 
-        val fragment = getFragment(model)
-        supportFragmentManager.beginTransaction()
-                .add(R.id.controls_container, fragment, fragment.javaClass.simpleName)
-                .commitAllowingStateLoss()
+        if (savedInstanceState == null) {
+            val fragment = getFragment(model)
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.controls_container, fragment, fragment.javaClass.simpleName)
+                    .commitAllowingStateLoss()
+        }
 
         score_value.text = model.getScore().value.toString()
         model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
@@ -33,10 +35,15 @@ class MainActivity : AppCompatActivity() {
             WordsViewModel.GameState.PLAYING -> ControlsGameFragment.newInstance()
             WordsViewModel.GameState.INTERMISSION -> IntermissionGameFragment.newInstance()
             WordsViewModel.GameState.EMPTY -> IntermissionGameFragment.newInstance()
+            WordsViewModel.GameState.PAUSED -> ControlsGameFragment.newInstance()
         }
     }
 
     private fun replaceGameLayout(fragment: Fragment) {
+        if (supportFragmentManager.findFragmentByTag(fragment.javaClass.simpleName) != null) {
+            return // Don't replace the existing fragment if it's the same
+        }
+
         supportFragmentManager.beginTransaction()
                 .replace(R.id.controls_container, fragment, fragment.javaClass.simpleName)
                 .commitAllowingStateLoss()
