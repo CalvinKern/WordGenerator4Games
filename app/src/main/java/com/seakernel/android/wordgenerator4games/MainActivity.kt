@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.arch.lifecycle.ViewModelProviders
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_controls.*
+import kotlinx.android.synthetic.main.layout_game_controls.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
