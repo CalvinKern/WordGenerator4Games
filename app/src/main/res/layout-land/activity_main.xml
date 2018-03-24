@@ -17,8 +17,6 @@
         android:paddingBottom="@dimen/default_margin"
         >
 
-        <include
-            layout="@layout/layout_game_controls"/>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout

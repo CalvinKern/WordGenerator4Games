@@ -5,10 +5,8 @@ import android.arch.lifecycle.Observer
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.arch.lifecycle.ViewModelProviders
-import android.view.View
+import android.support.v4.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_game_controls.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,37 +16,29 @@ class MainActivity : AppCompatActivity() {
 
         val model = ViewModelProviders.of(this).get(WordsViewModel::class.java)
 
-        model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
+        val fragment = getFragment(model)
+        supportFragmentManager.beginTransaction()
+                .add(R.id.controls_container, fragment, fragment.javaClass.simpleName)
+                .commitAllowingStateLoss()
 
-        time_left.text = getTimeLeftFormatted(model.getTime().value!!)
-        current_word.text = model.getCurrentWord()
         score_value.text = model.getScore().value.toString()
-
-        val nextWordClickListener = View.OnClickListener { current_word.text = model.skipWord() }
-        val guessedClickListener = View.OnClickListener { current_word.text = model.scoreWord() }
-
-        button_skip.setOnClickListener(nextWordClickListener)
-        button_guessed.setOnClickListener(guessedClickListener)
-
-        val timer = Timer()
-        timer.scheduleAtFixedRate(object: TimerTask() {
-            override fun run() {
-                time_left.post( {
-                    val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
-                    time_left.text = getTimeLeftFormatted(secondsLeft)
-                })
-            }
-        }, 1000, 1000)
+        model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
+        model.getGameState().observe(this, Observer {
+            replaceGameLayout(getFragment(model))
+        })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        button_skip.setOnClickListener(null)
-        button_guessed.setOnClickListener(null)
+    private fun getFragment(model: WordsViewModel): Fragment {
+        return when (model.getGameState().value!!) {
+            WordsViewModel.GameState.PLAYING -> ControlsGameFragment.newInstance()
+            WordsViewModel.GameState.INTERMISSION -> IntermissionGameFragment.newInstance()
+            WordsViewModel.GameState.EMPTY -> IntermissionGameFragment.newInstance()
+        }
     }
 
-    private fun getTimeLeftFormatted(secondsLeft: Long): String {
-        return getString(R.string.time_format, secondsLeft / 60, secondsLeft % 60)
+    private fun replaceGameLayout(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.controls_container, fragment, fragment.javaClass.simpleName)
+                .commitAllowingStateLoss()
     }
 }
