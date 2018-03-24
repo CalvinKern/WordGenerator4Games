@@ -39,10 +39,10 @@ class ControlsGameFragment: Fragment() {
         time_left.postDelayed(object: Runnable {
             override fun run() {
                 val secondsLeft = model.getTimeAndDecrementOneSecond().value!!
-                time_left.text = getTimeLeftFormatted(secondsLeft)
+                time_left?.text = getTimeLeftFormatted(secondsLeft)
 
                 if (secondsLeft > 0) {
-                    time_left.postDelayed(this, 1000)
+                    time_left?.postDelayed(this, 1000)
                 }
             }
         }, 1000)
@@ -56,6 +56,9 @@ class ControlsGameFragment: Fragment() {
     }
 
     private fun getTimeLeftFormatted(secondsLeft: Long): String {
+        if (activity == null || activity!!.isDestroyed || isDetached) {
+            return ""
+        }
         return getString(R.string.time_format, secondsLeft / 60, secondsLeft % 60)
     }
 }
