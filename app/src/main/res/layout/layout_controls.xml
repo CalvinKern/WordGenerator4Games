@@ -21,7 +21,6 @@
         android:id="@+id/guessing_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World World World World"
         android:textSize="@dimen/text_guessing"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="@id/time_left"

@@ -38,7 +38,7 @@ class WordsViewModel : ViewModel() {
             "work\n" +
             "world\n" +
             "week\n" +
-            "year\n"
+            "year"
 
     private var words: MutableLiveData<List<String>> = MutableLiveData()
 
@@ -50,7 +50,15 @@ class WordsViewModel : ViewModel() {
         return words
     }
 
+    fun nextWord(): String {
+        if (words.value?.isEmpty()!!) {
+            loadWords()
+        }
+        return (words.value as ArrayList).removeAt(0)
+    }
+
+    // Load a shuffled version of the list of words
     private fun loadWords() {
-        words.value?.plus(Collections.shuffle(LIST_OF_WORDS.split("\n")))
+        words.value = words.value?.plus(LIST_OF_WORDS.split("\n").apply { Collections.shuffle(this) })
     }
 }
