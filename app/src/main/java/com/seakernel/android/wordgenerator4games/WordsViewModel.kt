@@ -290,6 +290,11 @@ class WordsViewModel : ViewModel() {
         return nextWord()
     }
 
+    fun skipWord(): String {
+        score.value = score.value?.minus(1)
+        return nextWord()
+    }
+
     fun nextWord(): String {
         if (words.value == null || words.value!!.isEmpty()) {
             loadWords()

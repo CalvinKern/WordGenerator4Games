@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         guessing_word.text = model.nextWord()
         score_value.text = model.getScore().value.toString()
 
-        val nextWordClickListener = View.OnClickListener { guessing_word.text = model.nextWord() }
+        val nextWordClickListener = View.OnClickListener { guessing_word.text = model.skipWord() }
         val guessedClickListener = View.OnClickListener { guessing_word.text = model.scoreWord() }
 
         button_skip.setOnClickListener(nextWordClickListener)
