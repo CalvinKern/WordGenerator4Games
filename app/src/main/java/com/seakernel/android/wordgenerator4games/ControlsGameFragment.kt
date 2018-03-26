@@ -1,5 +1,6 @@
 package com.seakernel.android.wordgenerator4games
 
+import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -74,6 +75,7 @@ class ControlsGameFragment: Fragment() {
     }
 
     private fun getTimeLeftFormatted(secondsLeft: Long): String {
+//        activity!!.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
         if (activity == null || activity!!.isDestroyed || isDetached) {
             return ""
         }

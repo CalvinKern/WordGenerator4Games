@@ -1,5 +1,6 @@
 package com.seakernel.android.wordgenerator4games
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -32,9 +33,13 @@ class IntermissionGameFragment: Fragment() {
         }
 
         button_start.setOnClickListener {
-            model.reset()
             model.startPlaying()
         }
+
+        setTeamReadyMessage(model)
+        model.isTeamA().observe(this, Observer {
+            setTeamReadyMessage(model)
+        })
     }
 
     override fun onDestroyView() {
@@ -42,5 +47,10 @@ class IntermissionGameFragment: Fragment() {
 
         button_reset?.setOnClickListener(null)
         button_start?.setOnClickListener(null)
+    }
+
+    private fun setTeamReadyMessage(model: WordsViewModel) {
+        val teamName = if (model.isTeamA().value!!) R.string.team_a else R.string.team_b
+        ready_message.text = getString(R.string.team_ready_message, getString(teamName))
     }
 }

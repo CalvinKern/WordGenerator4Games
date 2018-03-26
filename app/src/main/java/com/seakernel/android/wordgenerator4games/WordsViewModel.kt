@@ -280,16 +280,26 @@ class WordsViewModel : ViewModel() {
     val INITIAL_TIME = 90L
 
     private var words: MutableLiveData<List<String>> = MutableLiveData()
-    private var score: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
+    private var scoreTeamA: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
+    private var scoreTeamB: MutableLiveData<Int> = MutableLiveData<Int>().also { it.value = 0 }
     private var time: MutableLiveData<Long> = MutableLiveData<Long>().also { it.value = INITIAL_TIME }
     private var gameState: MutableLiveData<GameState> = MutableLiveData<GameState>().also { it.value = GameState.EMPTY }
+    private var isTeamA: MutableLiveData<Boolean> = MutableLiveData<Boolean>().also { it.value = Math.random() < 0.5f }
 
     fun getGameState(): LiveData<GameState> {
         return gameState
     }
 
-    fun getScore(): LiveData<Int> {
-        return score
+    fun isTeamA(): LiveData<Boolean> {
+        return isTeamA
+    }
+
+    fun getScoreTeamA(): LiveData<Int> {
+        return scoreTeamA
+    }
+
+    fun getScoreTeamB(): LiveData<Int> {
+        return scoreTeamB
     }
 
     fun getTime(): LiveData<Long> {
@@ -301,18 +311,23 @@ class WordsViewModel : ViewModel() {
 
         if (time.value!! <= 0) {
             gameState.value = GameState.INTERMISSION
+            isTeamA.value = !isTeamA.value!!
         }
 
         return time
     }
 
     fun scoreWord(): String {
-        score.value = score.value?.plus(1)
+        val team = if (isTeamA.value!!) scoreTeamA else scoreTeamB
+
+        team.value = team.value!! + 1
         return nextWord()
     }
 
     fun skipWord(): String {
-        score.value = score.value?.minus(1)
+        val team = if (isTeamA.value!!) scoreTeamA else scoreTeamB
+
+        team.value = team.value!! - 1
         return nextWord()
     }
 
@@ -339,13 +354,17 @@ class WordsViewModel : ViewModel() {
     }
 
     fun reset() {
-        score.value = 0
-        time.value = INITIAL_TIME
+        scoreTeamA.value = 0
+        scoreTeamB.value = 0
         gameState.value = GameState.EMPTY
+        isTeamA.value = Math.random() < 0.5f
+
+        nextWord()
     }
 
     fun startPlaying() {
         if (gameState.value!! != WordsViewModel.GameState.PLAYING) {
+            time.value = INITIAL_TIME
             gameState.value = WordsViewModel.GameState.PLAYING
         }
     }

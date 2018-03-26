@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v4.app.Fragment
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_score.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,8 +23,10 @@ class MainActivity : AppCompatActivity() {
                     .commitAllowingStateLoss()
         }
 
-        score_value.text = model.getScore().value.toString()
-        model.getScore().observe(this as LifecycleOwner, Observer { score_value.text = model.getScore().value.toString() })
+        score_team_a_value.text = model.getScoreTeamA().value?.toString()
+        score_team_b_value.text = model.getScoreTeamB().value?.toString()
+        model.getScoreTeamA().observe(this as LifecycleOwner, Observer { score_team_a_value.text = model.getScoreTeamA().value!!.toString() })
+        model.getScoreTeamB().observe(this as LifecycleOwner, Observer { score_team_b_value.text = model.getScoreTeamB().value!!.toString() })
         model.getGameState().observe(this, Observer {
             replaceGameLayout(getFragment(model))
         })
