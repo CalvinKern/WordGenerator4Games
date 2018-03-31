@@ -312,6 +312,7 @@ class WordsViewModel : ViewModel() {
         if (time.value!! <= 0) {
             gameState.value = GameState.INTERMISSION
             isTeamA.value = !isTeamA.value!!
+            nextWord()
         }
 
         return time
@@ -358,19 +359,20 @@ class WordsViewModel : ViewModel() {
         scoreTeamB.value = 0
         gameState.value = GameState.EMPTY
         isTeamA.value = Math.random() < 0.5f
-
-        nextWord()
     }
 
     fun startPlaying() {
         if (gameState.value!! != WordsViewModel.GameState.PLAYING) {
-            time.value = INITIAL_TIME
+            if (gameState.value!! != GameState.PAUSED) {
+                time.value = INITIAL_TIME
+            }
             gameState.value = WordsViewModel.GameState.PLAYING
         }
     }
 
+    // Can only pause from a running game
     fun pauseGame() {
-        if (gameState.value!! != WordsViewModel.GameState.PAUSED) {
+        if (gameState.value!! == WordsViewModel.GameState.PLAYING) {
             gameState.value = WordsViewModel.GameState.PAUSED
         }
     }
